@@ -18,8 +18,32 @@ class Server {
   }
 
   routes() {
-    this.app.get("/hi", (req, res) => {
-      res.send("Hello World");
+    this.app.get("/api", (req, res) => {
+      res.json({
+        ok: true,
+        msg: "get API",
+      });
+    });
+
+    this.app.post("/api", (req, res) => {
+      res.json({
+        ok: true,
+        msg: "post API",
+      });
+    });
+
+    this.app.put("/api", (req, res) => {
+      res.json({
+        ok: true,
+        msg: "put API",
+      });
+    });
+
+    this.app.delete("/api", (req, res) => {
+      res.json({
+        ok: true,
+        msg: "delete API",
+      });
     });
   }
 
