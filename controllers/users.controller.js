@@ -1,4 +1,4 @@
-const { response } = require("express");
+const { response, request } = require("express");
 
 const getUsers = (req, res = response) => {
   res.json({
@@ -7,10 +7,16 @@ const getUsers = (req, res = response) => {
   });
 };
 
-const postUser = (req, res = response) => {
+const postUser = (req = request, res = response) => {
+  const { name, age } = req.body;
+
   res.json({
     ok: true,
     msg: "Post API Controller",
+    body: {
+      name,
+      age,
+    },
   });
 };
 
