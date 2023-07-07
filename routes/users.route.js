@@ -1,14 +1,17 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const Role = require("../models/role");
 
+// Controllers
 const {
   getUsers,
   postUser,
   putUser,
   deleteUser,
 } = require("../controllers/users.controller");
+
+// Middlewares
 const { validateFields } = require("../middlewares/validate-fields");
+const { validateRoleDB } = require("../middlewares/db-validators");
 
 const router = Router();
 
@@ -20,12 +23,7 @@ router.post(
     check("name", "Invalid name").not().isEmpty(),
     check("email", "Invalid email").isEmail(),
     check("password", "Invalid password").isLength({ min: 6 }),
-    check("rol").custom(async (rol = "") => {
-      const role = await Role.findOne({ rol });
-      if (!role) {
-        throw new Error(`rol ${rol} Invalid`);
-      }
-    }),
+    check("rol").custom(validateRoleDB),
     validateFields,
   ],
   postUser
