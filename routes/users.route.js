@@ -11,7 +11,7 @@ const {
 
 // Middlewares
 const { validateFields } = require("../middlewares/validate-fields");
-const { validateRoleDB } = require("../middlewares/db-validators");
+const { validateRoleDB, validateEmailDB } = require("../middlewares/db-validators");
 
 const router = Router();
 
@@ -22,6 +22,7 @@ router.post(
   [
     check("name", "Invalid name").not().isEmpty(),
     check("email", "Invalid email").isEmail(),
+    check("email").custom(validateEmailDB),
     check("password", "Invalid password").isLength({ min: 6 }),
     check("rol").custom(validateRoleDB),
     validateFields,

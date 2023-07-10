@@ -17,16 +17,7 @@ const getUsers = (req = request, res = response) => {
 
 const postUser = async (req = request, res = response) => {
   const { name, email, password, rol } = req.body;
-
   const user = new User({ name, email, password, rol });
-
-  // Check unique email
-  const exitsEmail = await User.findOne({ email });
-  if (exitsEmail) {
-    return res.status(400).json({
-      msg: "Email already exist",
-    });
-  }
 
   // Encrypt pass
   const salt = bcryptjs.genSaltSync();
@@ -36,7 +27,7 @@ const postUser = async (req = request, res = response) => {
   await user.save();
 
   res.json({
-    msg: "Post API Controller",
+    msg: "The user was added",
     data: user,
   });
 };
