@@ -11,7 +11,11 @@ const {
 
 // Middlewares
 const { validateFields } = require("../middlewares/validate-fields");
-const { validateRoleDB, validateEmailDB } = require("../middlewares/db-validators");
+const {
+  validateRoleDB,
+  validateEmailDB,
+  validateUserIdDB,
+} = require("../middlewares/db-validators");
 
 const router = Router();
 
@@ -30,7 +34,16 @@ router.post(
   postUser
 );
 
-router.put("/:id", putUser);
+router.put(
+  "/:id",
+  [
+    check("id", "Invalid id").isMongoId(),
+    check("id").custom(validateUserIdDB),
+    check("rol").custom(validateRoleDB),
+    validateFields,
+  ],
+  putUser
+);
 
 router.delete("/", deleteUser);
 
