@@ -1,7 +1,9 @@
 const { response, request } = require("express");
 const jwt = require("jsonwebtoken");
 
-const validateJWT = (req = request, res = response, next) => {
+const User = require("../models/user.model");
+
+const validateJWT = async (req = request, res = response, next) => {
   const token = req.header("Authorization");
   if (!token) {
     return res.status(401).json({
@@ -12,8 +14,23 @@ const validateJWT = (req = request, res = response, next) => {
   try {
     const { uid } = jwt.verify(token, process.env.SECRET_JWT);
 
-    req.uid = uid;
+    const user = await User.findById(uid);
 
+    if (!user) {
+      return res.status(401).json({
+        msg: `User no exist`,
+        errors: [],
+      });
+    }
+
+    if (!user.state) {
+      return res.status(401).json({
+        msg: `The user: ${user.name} is disabled`,
+        errors: [],
+      });
+    }
+
+    req.getUser = user;
     next();
   } catch (error) {
     console.log(error);
