@@ -17,7 +17,7 @@ const {
   validateUserIdDB,
 } = require("../middlewares/db-validators");
 const { validateJWT } = require("../middlewares/validate-jwt");
-const { validateRoleAdmin } = require("../middlewares/validate-role");
+const { validateRoleAdmin, hasRole } = require("../middlewares/validate-role");
 
 const router = Router();
 
@@ -52,6 +52,7 @@ router.delete(
   [
     validateJWT,
     validateRoleAdmin,
+    // hasRole("ADMIN_ROLE", "USER_ROLE", "MORE_ROLE"),
     check("id", "Invalid id").isMongoId(),
     check("id").custom(validateUserIdDB),
     validateFields,
