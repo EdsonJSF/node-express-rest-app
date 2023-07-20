@@ -10,14 +10,21 @@ const {
 } = require("../controllers/users.controller");
 
 // Middlewares
-const { validateFields } = require("../middlewares/validate-fields");
 const {
+  // validateJWT
+  validateJWT,
+
+  // validateFields
+  validateFields,
+
+  // validateDB
   validateRoleDB,
   validateEmailDB,
   validateUserIdDB,
-} = require("../middlewares/db-validators");
-const { validateJWT } = require("../middlewares/validate-jwt");
-const { validateRoleAdmin, hasRole } = require("../middlewares/validate-role");
+
+  // validateRole
+  validateRoleAdmin,
+} = require("../middlewares");
 
 const router = Router();
 
