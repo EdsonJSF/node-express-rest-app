@@ -51,6 +51,16 @@ const authLogin = async (req, res = response) => {
   }
 };
 
+const authGoogle = async (req, res = response) => {
+  const { id_token } = req.body;
+
+  res.json({
+    msg: "Login Google ok",
+    id_token,
+  });
+};
+
 module.exports = {
   authLogin,
+  authGoogle,
 };
