@@ -56,11 +56,35 @@ const authGoogle = async (req, res = response) => {
   const { id_token } = req.body;
 
   try {
-    const googleUser = await googleVerify(id_token);
+    const { name, email, image } = await googleVerify(id_token);
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      const data = {
+        name,
+        email,
+        password: "",
+        image,
+        google: true,
+      };
+
+      user = new User(data);
+      await user.save();
+    }
+
+    if (!user.state) {
+      return res.status(401).json({
+        msg: "The user is disabled, contact the administrator.",
+        errors: [],
+      });
+    }
+
+    const token = await generateJWT(user.id);
 
     res.json({
       msg: "Login Google ok",
-      id_token,
+      data: { user, token },
     });
   } catch (error) {
     console.log(error);
