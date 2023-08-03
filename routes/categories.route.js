@@ -27,7 +27,11 @@ router.get(
   getCategory
 );
 
-router.post("/", [validateJWT], createCategory);
+router.post(
+  "/",
+  [validateJWT, check("name", "Invalid name").not().isEmpty(), validateFields],
+  createCategory
+);
 
 router.put(
   "/:id",

@@ -1,5 +1,7 @@
 const { response, request } = require("express");
 
+const Categorie = require("../models/categorie.model");
+
 const getCategories = (req = request, res = response) => {
   res.json({
     msg: "getCategories",
@@ -14,10 +16,26 @@ const getCategory = (req = request, res = response) => {
   });
 };
 
-const createCategory = (req = request, res = response) => {
-  res.json({
-    msg: "createCategory",
-    data: "",
+const createCategory = async (req = request, res = response) => {
+  const { _id } = req.getUser;
+  const name = req.body.name.toUpperCase().trim();
+
+  const data = { name, user: _id };
+
+  const categorieDB = await Categorie.findOne({ name });
+  if (categorieDB) {
+    return res.status(400).json({
+      msg: `Categorie ${name} already exist`,
+      errors: [],
+    });
+  }
+
+  const categorie = new Categorie(data);
+  await categorie.save();
+
+  res.status(201).json({
+    msg: "The categorie was added",
+    data: categorie,
   });
 };
 
