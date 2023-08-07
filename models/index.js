@@ -1,10 +1,10 @@
-const Categorie = require("./categorie.model");
+const Category = require("./categorie.model");
 const Role = require("./role.model");
 const Server = require("./server");
 const User = require("./user.model");
 
 module.exports = {
-  Categorie,
+  Category,
   Role,
   Server,
   User,

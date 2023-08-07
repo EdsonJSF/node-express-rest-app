@@ -1,5 +1,4 @@
-const Role = require("../models/role.model");
-const User = require("../models/user.model");
+const { Category, User, Role } = require("../models");
 
 const validateRoleDB = async (rol = "") => {
   const role = await Role.findOne({ rol });
@@ -22,8 +21,25 @@ const validateUserIdDB = async (id = "") => {
   }
 };
 
+const validateCategoryIdDB = async (id = "") => {
+  const exitsCategory = await Category.findById(id);
+  if (!exitsCategory) {
+    throw new Error("Category does not exist");
+  }
+};
+
+const validateCategoryNameDB = async (name = "") => {
+  name = name.toUpperCase().trim();
+  const exitsCategoryName = await Category.findOne({ name });
+  if (exitsCategoryName && exitsCategoryName.state) {
+    throw new Error(`Category ${name} already exist`);
+  }
+};
+
 module.exports = {
   validateRoleDB,
   validateEmailDB,
   validateUserIdDB,
+  validateCategoryIdDB,
+  validateCategoryNameDB,
 };
