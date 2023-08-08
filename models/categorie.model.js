@@ -7,9 +7,9 @@ const CategorieSchema = Schema({
 });
 
 CategorieSchema.methods.toJSON = function () {
-  const { __v, _id, ...categorie } = this.toObject();
-  categorie.categorie_id = _id;
-  return categorie;
+  const { __v, _id, ...category } = this.toObject();
+  category.category_id = _id;
+  return category;
 };
 
 module.exports = model("Categorie", CategorieSchema);

@@ -1,4 +1,4 @@
-const { Category, User, Role } = require("../models");
+const { Category, User, Role, Product } = require("../models");
 
 const validateRoleDB = async (rol = "") => {
   const role = await Role.findOne({ rol });
@@ -36,10 +36,30 @@ const validateCategoryNameDB = async (name = "") => {
   }
 };
 
+const existCategoryNameDB = async (category = "") => {
+  category = category.toUpperCase().trim();
+  const exitsCategoryName = await Category.findOne({ name: category });
+  if (!exitsCategoryName) {
+    throw new Error(`Category ${category} does not exist`);
+  }
+  if (!exitsCategoryName.state) {
+    throw new Error(`Category ${category} was deleted`);
+  }
+};
+
+const validateProductIdDB = async (id = "") => {
+  const exitsProduct = await Product.findById(id);
+  if (!exitsProduct) {
+    throw new Error("Category does not exist");
+  }
+};
+
 module.exports = {
+  existCategoryNameDB,
   validateRoleDB,
   validateEmailDB,
   validateUserIdDB,
   validateCategoryIdDB,
   validateCategoryNameDB,
+  validateProductIdDB,
 };
