@@ -17,6 +17,7 @@ const {
   validateRoleAdmin,
   existCategoryNameDB,
   validateProductIdDB,
+  validateProductNameDB,
 } = require("../middlewares");
 
 const router = Router();
@@ -39,6 +40,7 @@ router.post(
     validateJWT,
     validateRoleAdmin,
     check("name", "Invalid name").not().isEmpty(),
+    check("name").custom(validateProductNameDB),
     check("category", "Invalid category").not().isEmpty(),
     check("category").custom(existCategoryNameDB),
     validateFields,

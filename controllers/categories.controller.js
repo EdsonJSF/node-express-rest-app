@@ -16,8 +16,8 @@ const getCategories = async (req = request, res = response) => {
 
   res.json({
     msg: "Categories",
-    data,
     total,
+    data,
   });
 };
 

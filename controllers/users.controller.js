@@ -14,8 +14,8 @@ const getUsers = async (req = request, res = response) => {
 
   res.json({
     msg: "Users",
-    data,
     total,
+    data,
   });
 };
 

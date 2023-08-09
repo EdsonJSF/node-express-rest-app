@@ -54,12 +54,24 @@ const validateProductIdDB = async (id = "") => {
   }
 };
 
+const validateProductNameDB = async (name = "") => {
+  name = name.toUpperCase().trim();
+  const exitsProductName = await Product.findOne({ name });
+  if (exitsProductName) {
+    throw new Error(`Category ${name} already exist`);
+  }
+};
+
 module.exports = {
-  existCategoryNameDB,
   validateRoleDB,
+
   validateEmailDB,
   validateUserIdDB,
+
   validateCategoryIdDB,
   validateCategoryNameDB,
+  existCategoryNameDB,
+
   validateProductIdDB,
+  validateProductNameDB,
 };

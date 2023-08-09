@@ -17,8 +17,8 @@ const getProducts = async (req = request, res = response) => {
 
   res.json({
     msg: "Products",
-    data,
     total,
+    data,
   });
 };
 
