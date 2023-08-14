@@ -8,10 +8,9 @@ const collections = ["categories", "products", "roles", "users"];
 const search = (req = request, res = response) => {
   let { collection, term } = req.params;
   collection = collection.toLowerCase();
-  term = term.toUpperCase();
 
   if (!collections.includes(collection)) {
-    res.status(400).json({
+    return res.status(400).json({
       msg: `Collection ${collection} is not allowed`,
       errors: [],
     });
@@ -32,8 +31,8 @@ const search = (req = request, res = response) => {
       break;
 
     default:
-      res.status(500).json({
-        msg: "collection error, contact the administrator",
+      return res.status(500).json({
+        msg: "Collection error, contact the administrator",
         errors: [],
       });
       break;
@@ -46,13 +45,18 @@ const doSearch = async (model, term, res = response) => {
   let searchResult = [];
   if (mongoId) {
     searchResult = await model.findById(term);
+    searchResult = [searchResult];
   } else {
-    searchResult = await model.findOne({ name: term });
+    const regex = new RegExp(term, "i");
+    searchResult = await model.find({
+      $or: [{ rol: regex }, { name: regex }, { email: regex }],
+      $and: [{ state: true }],
+    });
   }
 
   return res.json({
     msg: `Searching ${term} finished`,
-    data: searchResult ? [searchResult] : [],
+    data: searchResult ? searchResult : [],
   });
 };
 
