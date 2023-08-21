@@ -24,6 +24,17 @@ const loadFile = (req, res = response) => {
   }
 
   const { file } = req.files;
+  const cutName = file.name.split(".");
+  const fileExtension = cutName.at(-1).toLowerCase();
+
+  const validExtensions = ["gif", "jpeg", "jpg", "png", "svg", "webp"];
+
+  if (!validExtensions.includes(fileExtension)) {
+    return res.status(400).json({
+      msg: `incorrect file extension ${fileExtension}`,
+      errors: [],
+    });
+  }
 
   const uploadPath = path.join(__dirname, "../uploads/", file.name);
 
