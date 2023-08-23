@@ -23,9 +23,14 @@ const loadFile = async (req, res = response) => {
     });
   }
 
-  const fileName = await uploadFile(req.files);
-
-  res.json({ msg: fileName });
+  uploadFile(req.files)
+    .then((resp) => {
+      const { file } = req.files;
+      return res.json({ msg: resp, data: file });
+    })
+    .catch((resp) => {
+      return res.status(400).json({ msg: resp });
+    });
 };
 
 module.exports = {
