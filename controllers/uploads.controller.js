@@ -1,8 +1,7 @@
-const path = require("path");
 const { response } = require("express");
-const { v4: uuidv4 } = require("uuid");
+const { uploadFile } = require("../helpers");
 
-const loadFile = (req, res = response) => {
+const loadFile = async (req, res = response) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).json({
       msg: "No files were uploaded.",
@@ -24,35 +23,9 @@ const loadFile = (req, res = response) => {
     });
   }
 
-  const { file } = req.files;
-  const cutName = file.name.split(".");
-  const fileExtension = cutName.at(-1).toLowerCase();
+  const fileName = await uploadFile(req.files);
 
-  const validExtensions = ["gif", "jpeg", "jpg", "png", "svg", "webp"];
-
-  if (!validExtensions.includes(fileExtension)) {
-    return res.status(400).json({
-      msg: `incorrect file extension ${fileExtension}`,
-      errors: [],
-    });
-  }
-
-  const temporalName = uuidv4() + "." + fileExtension;
-  const uploadPath = path.join(__dirname, "../uploads/", temporalName);
-
-  file.mv(uploadPath, (err) => {
-    if (err) {
-      return res.status(500).json({
-        msg: "Internal error",
-        errors: err,
-      });
-    }
-
-    res.json({
-      msg: "File uploaded to " + uploadPath,
-      data: file,
-    });
-  });
+  res.json({ msg: fileName });
 };
 
 module.exports = {
