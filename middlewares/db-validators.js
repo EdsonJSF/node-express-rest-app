@@ -62,6 +62,15 @@ const validateProductNameDB = async (name = "") => {
   }
 };
 
+const validateCollections = (collection = "", collections = []) => {
+  const valid = collections.includes(collection.toLowerCase());
+
+  if (!valid) {
+    throw new Error(`${collection} is an invalid collection, ${collections}`);
+  }
+  return true;
+};
+
 module.exports = {
   validateRoleDB,
 
@@ -74,4 +83,6 @@ module.exports = {
 
   validateProductIdDB,
   validateProductNameDB,
+
+  validateCollections,
 };

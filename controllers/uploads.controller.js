@@ -1,4 +1,4 @@
-const { response } = require("express");
+const { response, request } = require("express");
 const { uploadFile } = require("../helpers");
 
 const loadFile = async (req, res = response) => {
@@ -33,6 +33,16 @@ const loadFile = async (req, res = response) => {
     });
 };
 
+const updateFile = async (req = request, res = response) => {
+  const { collection, id } = req.params;
+
+  res.json({
+    msg: "",
+    data: "",collection, id
+  });
+};
+
 module.exports = {
   loadFile,
+  updateFile,
 };

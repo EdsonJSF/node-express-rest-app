@@ -2,13 +2,25 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 
 // Controllers
-const { loadFile } = require("../controllers/uploads.controller");
+const { loadFile, updateFile } = require("../controllers/uploads.controller");
 
 // Middlewares
-const { validateFields } = require("../middlewares/validate-fields");
+const { validateFields, validateCollections } = require("../middlewares");
 
 const router = Router();
 
 router.post("/", [], loadFile);
+
+router.put(
+  "/:collection/:id",
+  [
+    check("id", "Invalid id").isMongoId(),
+    check("collection").custom((c) =>
+      validateCollections(c, ["users", "products"])
+    ),
+    validateFields,
+  ],
+  updateFile
+);
 
 module.exports = router;
