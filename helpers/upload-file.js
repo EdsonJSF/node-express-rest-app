@@ -26,7 +26,7 @@ const uploadFile = (
     file.mv(uploadPath, (err) => {
       if (err) return reject(err);
 
-      return resolve(`File uploaded to ${temporalName}`);
+      return resolve(temporalName);
     });
   });
 };
