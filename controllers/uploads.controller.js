@@ -1,4 +1,7 @@
 const { response, request } = require("express");
+const path = require("path");
+const fs = require("fs");
+
 const { uploadFile } = require("../helpers");
 const { User, Product } = require("../models");
 
@@ -15,13 +18,14 @@ const loadFile = async (req, res = response) => {
 
 const updateFile = async (req = request, res = response) => {
   const { collection, id } = req.params;
+  const collectionName = collection.toLowerCase();
 
-  let modelo;
+  let model;
 
-  switch (collection.toLowerCase()) {
+  switch (collectionName) {
     case "users":
-      modelo = await User.findById(id);
-      if (!modelo) {
+      model = await User.findById(id);
+      if (!model) {
         return res.status(400).json({
           msg: "User does not exist",
           errors: [],
@@ -30,8 +34,8 @@ const updateFile = async (req = request, res = response) => {
       break;
 
     case "products":
-      modelo = await Product.findById(id);
-      if (!modelo) {
+      model = await Product.findById(id);
+      if (!model) {
         return res.status(400).json({
           msg: "Product does not exist",
           errors: [],
@@ -46,14 +50,28 @@ const updateFile = async (req = request, res = response) => {
       });
   }
 
-  const name = await uploadFile(req.files, undefined, "images");
+  // Clear last image
+  if (model.image) {
+    const pathImage = path.join(
+      __dirname,
+      "../uploads",
+      collectionName,
+      model.image
+    );
 
-  modelo.image = name;
-  await modelo.save();
+    if (fs.existsSync(pathImage)) {
+      fs.unlinkSync(pathImage);
+    }
+  }
+
+  const name = await uploadFile(req.files, undefined, collectionName);
+
+  model.image = name;
+  await model.save();
 
   res.json({
     msg: `${collection} was updated`,
-    data: modelo,
+    data: model,
   });
 };
 
