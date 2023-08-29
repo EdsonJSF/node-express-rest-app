@@ -2,7 +2,11 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 
 // Controllers
-const { loadFile, updateFile } = require("../controllers/uploads.controller");
+const {
+  loadFile,
+  updateFile,
+  getImage,
+} = require("../controllers/uploads.controller");
 
 // Middlewares
 const {
@@ -14,6 +18,18 @@ const {
 const router = Router();
 
 router.post("/", [validateFile], loadFile);
+
+router.get(
+  "/:collection/:id",
+  [
+    check("id", "Invalid id").isMongoId(),
+    check("collection").custom((c) =>
+      validateCollections(c, ["users", "products"])
+    ),
+    validateFields,
+  ],
+  getImage
+);
 
 router.put(
   "/:collection/:id",

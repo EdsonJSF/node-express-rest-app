@@ -16,6 +16,60 @@ const loadFile = async (req, res = response) => {
     });
 };
 
+const getImage = async (req = request, res = response) => {
+  const { collection, id } = req.params;
+  const collectionName = collection.toLowerCase();
+
+  let model;
+
+  switch (collectionName) {
+    case "users":
+      model = await User.findById(id);
+      if (!model) {
+        return res.status(400).json({
+          msg: "User does not exist",
+          errors: [],
+        });
+      }
+      break;
+
+    case "products":
+      model = await Product.findById(id);
+      if (!model) {
+        return res.status(400).json({
+          msg: "Product does not exist",
+          errors: [],
+        });
+      }
+      break;
+
+    default:
+      return res.status(500).json({
+        msg: "Update file error, contact the administrator",
+        errors: [],
+      });
+  }
+
+  // Clear last image
+  if (model.image) {
+    const pathImage = path.join(
+      __dirname,
+      "../uploads",
+      collectionName,
+      model.image
+    );
+
+    if (fs.existsSync(pathImage)) {
+      return res.sendFile(pathImage)
+    }
+  }
+
+  res.json({
+    msg: `Placeholder not found`,
+    data: model,
+  });
+};
+
 const updateFile = async (req = request, res = response) => {
   const { collection, id } = req.params;
   const collectionName = collection.toLowerCase();
@@ -77,5 +131,6 @@ const updateFile = async (req = request, res = response) => {
 
 module.exports = {
   loadFile,
+  getImage,
   updateFile,
 };
