@@ -60,14 +60,16 @@ const getImage = async (req = request, res = response) => {
     );
 
     if (fs.existsSync(pathImage)) {
-      return res.sendFile(pathImage)
+      return res.sendFile(pathImage);
     }
   }
 
-  res.json({
-    msg: `Placeholder not found`,
-    data: model,
-  });
+  const pathImageNotFound = path.join(
+    __dirname,
+    "../assets/image-not-found.jpg"
+  );
+
+  res.sendFile(pathImageNotFound);
 };
 
 const updateFile = async (req = request, res = response) => {
